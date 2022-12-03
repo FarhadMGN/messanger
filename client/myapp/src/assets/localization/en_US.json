@@ -1,0 +1,11 @@
+{
+  "auth.component.join": "Join to the room",
+  "auth.component.username": "Username",
+  "auth.component.roomId": "Room ID",
+  "appname": "Chat application",
+  "change.locale": "Change language",
+  "locale.russian": "Russian",
+  "locale.english": "English",
+  "room.component.sendMessage": "Send",
+  "room.component.inputMessage": "Write message"
+}

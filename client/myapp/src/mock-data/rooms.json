@@ -1,0 +1,95 @@
+[
+  {
+    "roomId": "lounge room",
+    "users": [
+      {
+        "name": "oleg",
+        "id": "1"
+      },
+      {
+        "name": "Elena",
+        "id": "2"
+      }
+    ],
+    "messages": [
+      {
+        "content": "Hello elena",
+        "type": "TEXT",
+        "from": {
+          "id": "1",
+          "name": "oleg"
+        }
+      },
+      {
+        "content": "Hello Oleg",
+        "type": "TEXT",
+        "from": {
+          "id": "2",
+          "name": "Elena"
+        }
+      },
+      {
+        "content": "how are u?",
+        "type": "TEXT",
+        "from": {
+          "id": "1",
+          "name": "oleg"
+        }
+      },
+      {
+        "content": "Hello Oleg!!!",
+        "type": "TEXT",
+        "from": {
+          "id": "2",
+          "name": "Elena"
+        }
+      },{
+        "content": "Hello Oleg!",
+        "type": "TEXT",
+        "from": {
+          "id": "2",
+          "name": "Elena"
+        }
+      },{
+        "content": "Hello Oleg!",
+        "type": "TEXT",
+        "from": {
+          "id": "2",
+          "name": "Elena"
+        }
+      },
+      {
+        "content": "how are u? lorem7 ow are u? lorem7 ow are u? lorem7 ow are u? lorem7 ow are u? lorem7",
+        "type": "TEXT",
+        "from": {
+          "id": "1",
+          "name": "oleg"
+        }
+      },
+      {
+        "content": "how are u?",
+        "type": "TEXT",
+        "from": {
+          "id": "1",
+          "name": "oleg"
+        }
+      },
+      {
+        "content": "how are u?",
+        "type": "TEXT",
+        "from": {
+          "id": "1",
+          "name": "oleg"
+        }
+      },
+      {
+        "content": "how are u?",
+        "type": "TEXT",
+        "from": {
+          "id": "1",
+          "name": "oleg"
+        }
+      }
+    ]
+  }
+]

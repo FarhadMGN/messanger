@@ -1,0 +1,101 @@
+.room-component {
+    /*width: 100%;*/
+    height: 100%;
+    background: #8D9194;
+    /*display: flex;*/
+    /*flex-direction: column;*/
+    position: relative;
+    overflow: hidden;
+
+
+}
+
+.room-component_interaction {
+    display: flex;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40px;
+    padding: 8px;
+    background: whitesmoke;
+    border-radius: 8px 8px 0 0;
+}
+
+.room-component_content {
+    /*display: flex;*/
+    /*flex-direction: row;*/
+    /*height: 400px;*/
+    position: absolute;
+    bottom: 60px;
+    left: 0;
+    right: 0;
+    top: 0;
+}
+
+.room-component_content__users {
+    max-width: 120px;
+    height: 100vh;
+    background: #727B7E;
+}
+
+.room-component_content__users-user {
+    height: 20px;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px whitesmoke dashed;
+    color: white;
+    margin: 0 4px 8px 4px;
+}
+
+.room-component_content__messages {
+    right: 0;
+    top: 0;
+    left: 120px;
+    height: 100%;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.room-component_content__messages-msg-my {
+    display: flex;
+    border-radius: 8px;
+    padding: 8px;
+    margin: 8px 16px;
+    max-width: 250px;
+    color: black;
+    background: lightgoldenrodyellow;
+    align-self: flex-end;
+    flex-direction: column;
+}
+
+.room-component_content__messages-msg-other {
+    border-radius: 8px;
+    padding: 8px;
+    margin: 8px 16px;
+    max-width: 150px;
+    color: black;
+    background: #e1e6ea;
+    display: flex;
+    align-self: flex-start;
+    flex-direction: column;
+}
+
+.room-component_content__messages-user {
+    font-size: 10px;
+    align-self: flex-start;
+    color: cadetblue;
+}
+
+.room-component_interaction__input {
+    flex: 8;
+    margin-right: 8px;
+}
+
+.room-component_interaction__submit {
+    height: 40px;
+    flex: 1;
+    margin-left: 8px;
+}

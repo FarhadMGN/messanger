@@ -1,0 +1,11 @@
+{
+  "auth.component.join": "Присоединиться к комнате",
+  "auth.component.username": "Имя пользователя",
+  "auth.component.roomId": "ID комнаты",
+  "appname": "Приложение чат",
+  "change.locale": "Сменить язык",
+  "locale.russian": "Русский",
+  "locale.english": "Английский",
+  "room.component.sendMessage": "Отправить",
+  "room.component.inputMessage": "Напишите сообщение"
+}
