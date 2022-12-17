@@ -12,6 +12,7 @@ function MainComponent() {
 
     const logout = () => {
         setAuth(false);
+        setRoomId("");
     };
 
     const login = (loginData: {userName: string, roomId: string}) => {
@@ -22,7 +23,7 @@ function MainComponent() {
     };
     return (
         <>
-            <HeaderComponent onLogout={logout} auth={auth}/>
+            <HeaderComponent onLogout={logout} auth={auth} roomId={roomId}/>
             <Routes>
                 <Route path="/" element={<>hola</>}/>
                 <Route path="/auth" element={

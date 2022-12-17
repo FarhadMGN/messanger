@@ -1,0 +1,15 @@
+{
+    "name": "messanger",
+    "version": "1.0.0",
+    "main": "index.js",
+    "license": "MIT",
+    "private": true,
+    "dependencies": {
+      "concurrently": "^7.0.0"
+    },
+    "scripts": {
+      "dev:client": "npm start --prefix client/myapp",
+      "dev:server": "npm dev --prefix server",
+      "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\""
+    }
+  }
