@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { io } from 'socket.io-client'
+import { MessageModel } from '../models/message.model'
 
 export default function useChat() {
     // const user = storage.get(USER_KEY)
@@ -29,17 +30,17 @@ export default function useChat() {
     //   })
     }, [])
   
-    const sendMessage2 = (message: any) => {
+    const sendMessage2 = (message: MessageModel) => {
       socket.emit('message:add', message)
     }
   
-    const removeMessage = (message: any) => {
+    const removeMessage = (message: MessageModel) => {
       socket.emit('message:remove', message)
     }
 
-    const testSend = (message: any) => {
+    const testSend = (message: MessageModel) => {
       socket.emit('testEvent', message)
     }
   
-    return { users2, messages2, log, sendMessage2, removeMessage, testSend }
+    return { users2, messages2, log, sendMessage2, removeMessage, testSend, socket }
   }
