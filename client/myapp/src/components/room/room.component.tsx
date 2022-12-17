@@ -5,8 +5,16 @@ import {Button, TextField} from "@mui/material";
 import {useTranslation} from "react-i18next";
 import {MessageModel} from "../../models/message.model";
 import {RoomModel} from "../../models/room.model";
-
+import useChat from "../../hooks/useChat.hook";
+import { io } from 'socket.io-client'
+let socket = io('http://localhost:4000', {
+        query: {
+          roomId: "message",
+        }
+      })
 function RoomComponent(props: {roomId: string, userName: string}) {
+    // const { users2, messages2, log, sendMessage2, removeMessage, testSend } = useChat()
+    
     const { t } = useTranslation();
     const [rooms, setRooms] = useState(r);
     const [message, setMessage] = useState("");
@@ -19,6 +27,12 @@ function RoomComponent(props: {roomId: string, userName: string}) {
         "name": props.userName,
         "id": "1"
     });
+    
+    const testSend = (message: any) => {
+        console.log("here");
+        
+        socket.emit('testEvent', message)
+      }
 
     console.log("rooms", rooms);
     const sendMessage = () => {
@@ -27,6 +41,7 @@ function RoomComponent(props: {roomId: string, userName: string}) {
             content: message,
             from: currentUser
         };
+        testSend(m)
         setMessages([...messages, m]);
         setMessage("");
         console.log("message was sanded", messages)
