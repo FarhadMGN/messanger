@@ -44,6 +44,7 @@ function MainComponent() {
     const logout = () => {
         setAuth(false);
         setRoomId("");
+        socket.emit('userLeaveRoom', currentUser);
     };
 
     const login = (loginData: {userName: string, roomId: string}) => {
@@ -70,6 +71,7 @@ function MainComponent() {
                 setCurrentUser(currentUser);
                 localStorage.setItem('USER_DATA', JSON.stringify(currentUser))
                 setRoomId(data.roomId);
+                socket.emit('message:get', data.roomId);
                 navigate("/room");
                 console.log("loginData", loginData)
             }

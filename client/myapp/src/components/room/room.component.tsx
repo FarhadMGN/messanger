@@ -36,8 +36,6 @@ function RoomComponent(props: {roomId: string, currentUser: UserModel, socket: a
                     console.error(data)
                 } 
                 setMessage("");
-                console.log("sendMessage messages", message);
-                props.socket.emit('message:get', props.roomId)
             })
         }
         
