@@ -1,12 +1,10 @@
-// const app = require('express')();
-// const http = require('http').createServer(app);
-
 const { createServer } = require('http')
 const express = require("express")
 const io = require("socket.io")
 const {ALLOWED_ORIGIN} = require("./server-const")
 const cors = require('cors')
-const { join } = require('path')
+const users = require('./users')()
+const messages = {}
 
 const app = express()
 app.use(
@@ -23,6 +21,9 @@ const socket = io(server, {
     },
 })
 
+const updateMessageList = (roomId) => {
+    
+  }
 
 
 socket.on('connection', (soc) => {
@@ -37,11 +38,11 @@ socket.on('connection', (soc) => {
         }
 
         soc.join(data.roomId)
+        data.id = soc.id
         cb(data)
-        // soc.emit('notification', {
-        //     text: `User ${data.name} joined`,
-        //     type: "success"
-        // })
+        users.removeUserById(data.id)
+        users.add(data)
+        
         soc.broadcast
         .to(data.roomId)
         .emit('notification', {
@@ -51,20 +52,41 @@ socket.on('connection', (soc) => {
         
     })
     console.log("[server] on connection")
-    // const { roomId, userName } = soc.handshake.query
-    // console.log("[server] roomId", roomId);
-    // console.log("[server] userName", userName);
 
-    soc.on('message:add', (data, cb) => {
+    soc.on('message:send', (data, cb) => {
+        // console.log("message:send server");
         if (!data.content) {
             return cb("Empty input")
         }
+        // for debug
         data.content = data.content + " server"
+        const user = users.getUserById(data.from.id)
+        // console.log("user",user);
+        if (user) {
+            console.log("message:add server", user);
+            // soc.to(user.roomId).emit('message:add', data);
+            const roomId = user.roomId
+            if (messages[roomId]) {
+                messages[roomId].push(data)
+            } else {
+                messages[roomId] = [data]
+            }
+            soc.to(roomId).emit('message_list:update', messages[roomId])
+            console.log("   >>messages[roomId]", messages[roomId]);
+        }
         cb(data)
-        console.log("[server] add message", data);
+        // console.log("[server] add message", data);
     })
     soc.on('testEvent', (msg) => {
         console.log("[server] test sicket", msg);
+      })
+
+    soc.on('message:get', (roomId) => {
+        try {
+          soc.to(roomId).emit('message_list:update', messages[roomId])
+        } catch (e) {
+          onError(e)
+        }
       })
 })
 
