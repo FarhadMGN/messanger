@@ -3,14 +3,13 @@ import "./auth.components.css"
 import {Button, TextField} from "@mui/material";
 import {useTranslation} from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { io } from 'socket.io-client'
 
 function AuthComponent(props: any) {
     const { t } = useTranslation();
-    let navigate = useNavigate();
     const [userName, setUserName] = useState("");
     const [roomId, setRoomId] = useState("");
     const connectToRoom = () => {
-        navigate("/room");
         props.onLogin({userName: userName, roomId: roomId})
     };
     return (

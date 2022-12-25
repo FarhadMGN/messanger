@@ -6,7 +6,7 @@ import TranslateIcon from '@mui/icons-material/Translate';
 import {AccountCircle} from "@mui/icons-material";
 import {useNavigate} from "react-router";
 
-function HeaderComponent(props: any) {
+function HeaderComponent(props: {roomId: string, auth: any, onLogout: any}) {
     const { t } = useTranslation();
     let navigate = useNavigate();
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -48,7 +48,7 @@ function HeaderComponent(props: any) {
                 >
                 </IconButton>
                 <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                    {t('appname')}
+                    {t('appname') + " " + props.roomId}
                 </Typography>
                 <IconButton
                     size="large"
