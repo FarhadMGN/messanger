@@ -47,6 +47,14 @@
     color: white;
     margin: 0 4px 8px 4px;
 }
+.room-component_content__users-user__my {
+    height: 20px;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px whitesmoke dashed;
+    color: greenyellow;
+    margin: 0 4px 8px 4px;
+}
 
 .room-component_content__messages {
     right: 0;
