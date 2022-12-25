@@ -27,8 +27,16 @@ const updateMessageList = (roomId) => {
 
 
 socket.on('connection', (soc) => {
+    //users handlers
+    soc.on('userLeaveRoom', userInfo => {
+        users.removeUserById(userInfo.id)
+        console.log("users", users.users)
+        soc.to(userInfo.roomId).emit('notification', {
+            text: `User ${userInfo.name} leave room.`,
+            type: "info"
+        })
+    })
     soc.on('userJoined', (data, cb) => {
-        console.log("data", data);
         if (!data.name || !data.roomId) {
             soc.emit('notification', {
                 text: "Incorrect input data",
@@ -43,13 +51,12 @@ socket.on('connection', (soc) => {
         users.removeUserById(data.id)
         users.add(data)
         
-        soc.broadcast
+        soc
         .to(data.roomId)
         .emit('notification', {
             text: `User ${data.name} joined`,
             type: "success"
         })
-        
     })
     console.log("[server] on connection")
 
@@ -71,7 +78,7 @@ socket.on('connection', (soc) => {
             } else {
                 messages[roomId] = [data]
             }
-            soc.to(roomId).emit('message_list:update', messages[roomId])
+            socket.to(roomId).emit('message_list:update', messages[roomId])
             console.log("   >>messages[roomId]", messages[roomId]);
         }
         cb(data)
@@ -83,7 +90,8 @@ socket.on('connection', (soc) => {
 
     soc.on('message:get', (roomId) => {
         try {
-          soc.to(roomId).emit('message_list:update', messages[roomId])
+          const existMessages = messages[roomId]
+          socket.to(roomId).emit('message_list:update', existMessages?.length ? messages[roomId] : [])
         } catch (e) {
           onError(e)
         }
