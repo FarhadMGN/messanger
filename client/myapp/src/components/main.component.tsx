@@ -25,7 +25,7 @@ function MainComponent() {
         roomId: ""
     });
     const [roomId, setRoomId] = useState("");
-    const {messages, socket} = useChat();
+    const {users, messages, socket} = useChat();
     const [open, setOpen] = useState(false);
     const [notificationType, setNotificationType] = useState('success');
     const [notificationText, setNotificationText] = useState('');
@@ -50,7 +50,6 @@ function MainComponent() {
     const login = (loginData: {userName: string, roomId: string}) => {
         // possible need move to useEffect
         socket.on('notification', (notification) => {
-            console.log("notification", notification);
             setNotificationType(notification.type)
             setNotificationText(notification.text)
             setOpen(true)
@@ -69,11 +68,9 @@ function MainComponent() {
                     roomId: data.roomId
                 }
                 setCurrentUser(currentUser);
-                localStorage.setItem('USER_DATA', JSON.stringify(currentUser))
                 setRoomId(data.roomId);
                 socket.emit('message:get', data.roomId);
                 navigate("/room");
-                console.log("loginData", loginData)
             }
         })
     };
@@ -87,7 +84,7 @@ function MainComponent() {
                         <AuthComponent onLogin={login}/>
                     </div>
                 } />
-                <Route path="/room" element={<RoomComponent roomId={roomId} currentUser={currentUser} socket={socket} messages={messages}/>}/>
+                <Route path="/room" element={<RoomComponent roomId={roomId} currentUser={currentUser} socket={socket} messages={messages} users={users}/>}/>
             </Routes>
             <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
                 <Alert onClose={handleClose} severity={notificationType as AlertColor} sx={{ width: '100%' }}>

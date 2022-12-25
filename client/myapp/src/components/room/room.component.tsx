@@ -1,33 +1,22 @@
-import React, {useEffect, useState} from "react";
-import r from "../../mock-data/rooms.json"
+import {useState} from "react";
 import "./room.component.css"
 import {Button, TextField} from "@mui/material";
 import {useTranslation} from "react-i18next";
 import {MessageModel} from "../../models/message.model";
-import {RoomModel} from "../../models/room.model";
 import { UserModel } from "../../models/user.model";
 
 
-function RoomComponent(props: {roomId: string, currentUser: UserModel, socket: any, messages: MessageModel[]}) {
-    // const { users2, messages2, log, sendMessage2, removeMessage, testSend } = useChat()
-    
+function RoomComponent(props: {roomId: string, currentUser: UserModel, socket: any, messages: MessageModel[], users: UserModel[]}) {  
     const { t } = useTranslation();
-    const [room, setRoom] = useState();
     const [message, setMessage] = useState("");
-    console.log("messages wil be set to", props.messages);
-    
-    const [users, setUsers] = useState([]);
-    const [currentUser, setCurrentUser] = useState(props.currentUser);
 
     const sendMessage = () => {
         const m: MessageModel = {
             type: "TEXT",
             content: message,
-            from: currentUser
+            from: props.currentUser
         };
-        console.log("mes", m);
         
-        // testSend(m)
         if (m.content) {
             props.socket.emit('message:send', m, (data: any) => {
                 console.log("message:send client");
@@ -44,15 +33,15 @@ function RoomComponent(props: {roomId: string, currentUser: UserModel, socket: a
         <div className="room-component">
             <div className="room-component_content">
                 <div className="room-component_content__users">
-                    {users.map((user) => (
-                        <div className="room-component_content__users-user">
-                            { user.name + (user.id === currentUser.id ? " (you)" : "")}
+                    {props.users.map((user) => (
+                        <div className={user.id === props.currentUser.id ? "room-component_content__users-user__my" :"room-component_content__users-user"}>
+                            { user.name}
                         </div>
                     ))}
                 </div>
                 <div className="room-component_content__messages">
                     {props.messages.map((message) => (
-                        <div className={message.from.id === currentUser.id ?
+                        <div className={message.from.id === props.currentUser.id ?
                             "room-component_content__messages-msg-my" :
                             "room-component_content__messages-msg-other"}>
                             <label className="room-component_content__messages-user">{message.from.name}</label>

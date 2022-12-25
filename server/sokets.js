@@ -25,6 +25,11 @@ const updateMessageList = (roomId) => {
     
   }
 
+const updateUsersList = (roomId) => {
+    const roomUser = users.getByRoom(roomId);
+    socket.to(roomId).emit('user_list:update', roomUser)
+}
+
 
 socket.on('connection', (soc) => {
     //users handlers
@@ -35,6 +40,7 @@ socket.on('connection', (soc) => {
             text: `User ${userInfo.name} leave room.`,
             type: "info"
         })
+        updateUsersList(userInfo.roomId)
     })
     soc.on('userJoined', (data, cb) => {
         if (!data.name || !data.roomId) {
@@ -57,21 +63,17 @@ socket.on('connection', (soc) => {
             text: `User ${data.name} joined`,
             type: "success"
         })
+        updateUsersList(data.roomId)
     })
-    console.log("[server] on connection")
 
+    // messages handlers
     soc.on('message:send', (data, cb) => {
-        // console.log("message:send server");
         if (!data.content) {
             return cb("Empty input")
         }
-        // for debug
-        data.content = data.content + " server"
+        
         const user = users.getUserById(data.from.id)
-        // console.log("user",user);
         if (user) {
-            console.log("message:add server", user);
-            // soc.to(user.roomId).emit('message:add', data);
             const roomId = user.roomId
             if (messages[roomId]) {
                 messages[roomId].push(data)
@@ -79,10 +81,8 @@ socket.on('connection', (soc) => {
                 messages[roomId] = [data]
             }
             socket.to(roomId).emit('message_list:update', messages[roomId])
-            console.log("   >>messages[roomId]", messages[roomId]);
         }
         cb(data)
-        // console.log("[server] add message", data);
     })
     soc.on('testEvent', (msg) => {
         console.log("[server] test sicket", msg);
