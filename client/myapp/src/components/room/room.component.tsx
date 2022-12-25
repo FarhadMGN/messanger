@@ -1,33 +1,23 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import r from "../../mock-data/rooms.json"
 import "./room.component.css"
 import {Button, TextField} from "@mui/material";
 import {useTranslation} from "react-i18next";
 import {MessageModel} from "../../models/message.model";
 import {RoomModel} from "../../models/room.model";
+import { UserModel } from "../../models/user.model";
 
 
-function RoomComponent(props: {roomId: string, userName: string, socket: any}) {
+function RoomComponent(props: {roomId: string, currentUser: UserModel, socket: any, messages: MessageModel[]}) {
     // const { users2, messages2, log, sendMessage2, removeMessage, testSend } = useChat()
     
     const { t } = useTranslation();
     const [room, setRoom] = useState();
     const [message, setMessage] = useState("");
-    const [messages, setMessages] = useState(r.find((room: RoomModel) => room.roomId === props.roomId)?.messages || []);
-    const [users, setUsers] = useState(r.find((room: RoomModel) => room.roomId === props.roomId)?.users || [{
-        "name": props.userName,
-        "id": "1"
-    }]);
-    const [currentUser, setCurrentUser] = useState({
-        "name": props.userName,
-        "id": "1"
-    });
+    console.log("messages wil be set to", props.messages);
     
-    const testSend = (message: MessageModel) => {
-        console.log("here");
-        
-        props.socket.emit('testEvent', message)
-      }
+    const [users, setUsers] = useState([]);
+    const [currentUser, setCurrentUser] = useState(props.currentUser);
 
     const sendMessage = () => {
         const m: MessageModel = {
@@ -35,16 +25,19 @@ function RoomComponent(props: {roomId: string, userName: string, socket: any}) {
             content: message,
             from: currentUser
         };
+        console.log("mes", m);
+        
         // testSend(m)
         if (m.content) {
-            props.socket.emit('message:add', m, (data: any) => {
+            props.socket.emit('message:send', m, (data: any) => {
+                console.log("message:send client");
+                
                 if (typeof data === 'string') {
                     console.error(data)
-                } else {
-                    setMessages([...messages, data]);
-                    setMessage("");
-                    console.log("message was sanded", messages)
-                }
+                } 
+                setMessage("");
+                console.log("sendMessage messages", message);
+                props.socket.emit('message:get', props.roomId)
             })
         }
         
@@ -60,7 +53,7 @@ function RoomComponent(props: {roomId: string, userName: string, socket: any}) {
                     ))}
                 </div>
                 <div className="room-component_content__messages">
-                    {messages.map((message) => (
+                    {props.messages.map((message) => (
                         <div className={message.from.id === currentUser.id ?
                             "room-component_content__messages-msg-my" :
                             "room-component_content__messages-msg-other"}>

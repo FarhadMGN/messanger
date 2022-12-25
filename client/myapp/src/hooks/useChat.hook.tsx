@@ -3,44 +3,50 @@ import { io } from 'socket.io-client'
 import { MessageModel } from '../models/message.model'
 
 export default function useChat() {
-    // const user = storage.get(USER_KEY)
     const [users2, setUsers] = useState([])
-    const [messages2, setMessages] = useState([])
+    
+    const [messages, setMessages] = useState([]);
     const [log, setLog] = useState(null)
+    // const opt = {
+    //     query: {
+    //       roomId: user?.roomId,
+    //       userName: user?.name
+    //     }
+    //   }
     const { current: socket } = useRef(
       io('http://localhost:4000')
     )
     console.log("on io")
   
     useEffect(() => {
-    //   socket.emit('user:add', user)
-  
-    //   socket.emit('message:get')
-  
       socket.on('log', (log) => {
         setLog(log)
       })
+
+    //   socket.on('message:add', (data: any) => {
+    //     console.log("message:add use effect", messages, data)
   
     //   socket.on('user_list:update', (users) => {
     //     setUsers(users)
     //   })
   
-    //   socket.on('message_list:update', (messages) => {
-    //     setMessages(messages)
-    //   })
+      socket.on('message_list:update', (messages) => {
+        console.log("[HOOK] messages", messages);
+        setMessages(messages)
+      })
     }, [])
   
-    const sendMessage2 = (message: MessageModel) => {
-      socket.emit('message:add', message)
-    }
+    // const sendMessage = (message: MessageModel) => {
+    //   socket.emit('message:send', message)
+    // }
   
     const removeMessage = (message: MessageModel) => {
       socket.emit('message:remove', message)
     }
 
-    const testSend = (message: MessageModel) => {
-      socket.emit('testEvent', message)
-    }
+    // const testSend = (message: MessageModel) => {
+    //   socket.emit('testEvent', message)
+    // }
   
-    return { users2, messages2, log, sendMessage2, removeMessage, testSend, socket }
+    return { users2, messages, log, removeMessage, socket }
   }
