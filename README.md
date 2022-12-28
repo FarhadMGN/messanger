@@ -10,3 +10,11 @@ Then if someone else logged into the room you can chat.
 
 Also application supports localization and logs user activity
 <img width="1152" alt="image" src="https://user-images.githubusercontent.com/43624329/209516102-d5dc83bb-5d69-48fd-957a-1862aed89ece.png">
+
+Latest feature
+Now if yours dialogue is deadlocked, possible to send random question and discuss one.
+After discuss reporter can share answer.
+<img width="1020" alt="image" src="https://user-images.githubusercontent.com/43624329/209860808-b692f499-f316-4e25-adc1-b5d888369e2d.png">
+
+<img width="1023" alt="image" src="https://user-images.githubusercontent.com/43624329/209860940-c73b64f6-8303-4524-88f4-331d555ec388.png">
+
