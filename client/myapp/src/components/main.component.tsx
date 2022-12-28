@@ -78,8 +78,7 @@ function MainComponent() {
         <>
             <HeaderComponent onLogout={logout} auth={auth} roomId={roomId}/>
             <Routes>
-                <Route path="/" element={<>hola</>}/>
-                <Route path="/auth" element={
+                <Route path="/" element={
                     <div className="App-header_auth">
                         <AuthComponent onLogin={login}/>
                     </div>
