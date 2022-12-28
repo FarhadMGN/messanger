@@ -1,19 +1,23 @@
 import {useState} from "react";
 import "./room.component.css"
-import {Button, TextField} from "@mui/material";
+import {Button, TextField, Tooltip} from "@mui/material";
 import {useTranslation} from "react-i18next";
 import {MessageModel} from "../../models/message.model";
 import { UserModel } from "../../models/user.model";
+import QuizIcon from '@mui/icons-material/Quiz';
+import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 
 
 function RoomComponent(props: {roomId: string, currentUser: UserModel, socket: any, messages: MessageModel[], users: UserModel[]}) {  
     const { t } = useTranslation();
     const [message, setMessage] = useState("");
+    const [answer, setAnswer] = useState("");
+    const [isSending, setIsSending] = useState(false);
 
-    const sendMessage = () => {
+    const sendMessage = (messageContent: string) => {
         const m: MessageModel = {
             type: "TEXT",
-            content: message,
+            content: messageContent,
             from: props.currentUser
         };
         
@@ -27,8 +31,50 @@ function RoomComponent(props: {roomId: string, currentUser: UserModel, socket: a
                 setMessage("");
             })
         }
-        
     };
+
+    const sendQuestion = async () => {
+        setIsSending(true);
+        const url = `https://jservice.io/api/random?count=${1}`
+        const params = {
+            method: "get",
+            headers: {
+                 "Access-Control-Allow-Origin": "*",
+                 "ContentType": "text/html",
+                 "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,OPTIONS"
+            }
+        }
+        let response = await fetch(url, params as any);
+
+        if (response.ok) {
+            let question = await response.json();
+            const content = question[0].question + "?";
+            sendMessage(content);
+            const answ = question[0].answer;
+            setAnswer(answ);
+            setIsSending(false);
+          } else {
+            console.log("Ошибка HTTP: ", response.status);
+            setIsSending(false);
+          }
+    }
+
+    const sendAnswer = () => {
+        const m: MessageModel = {
+            type: "ANSWER",
+            content: answer,
+            from: props.currentUser
+        };
+
+        props.socket.emit('message:send', m, (data: any) => {
+            console.log("message:send client");
+            
+            if (typeof data === 'string') {
+                console.error(data)
+            } 
+            setAnswer("");
+        })
+    }
     return (
         <div className="room-component">
             <div className="room-component_content">
@@ -61,8 +107,18 @@ function RoomComponent(props: {roomId: string, currentUser: UserModel, socket: a
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                 />
+                <Tooltip title="Send random question">
+                    <QuizIcon color={isSending ? 'secondary' : 'primary'} onClick={() => sendQuestion()}/>
+                </Tooltip>
+                {
+                    answer ?
+                    <Tooltip title="Send last question answer">
+                        <QuestionAnswerIcon color={'primary'} onClick={() => sendAnswer()}/>
+                    </Tooltip> :
+                    null
+                }
                 <Button
-                    onClick={() => sendMessage()}
+                    onClick={() => sendMessage(message)}
                     className="room-component_interaction__submit"
                     size="small"
                     variant="contained">{t('room.component.sendMessage')}</Button>
