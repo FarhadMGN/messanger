@@ -47,7 +47,7 @@ function MainComponent() {
         socket.emit('userLeaveRoom', currentUser);
     };
 
-    const login = (loginData: {userName: string, roomId: string}) => {
+    const login = (loginData: {userName: string, roomId: string, password: string}) => {
         // possible need move to useEffect
         socket.on('notification', (notification) => {
             setNotificationType(notification.type)
@@ -56,7 +56,8 @@ function MainComponent() {
         })
         socket.emit('userJoined', {
             name: loginData.userName,
-            roomId: loginData.roomId
+            roomId: loginData.roomId,
+            password: loginData.password
         }, (data: any) => {
             if (typeof data === 'string') {
                 console.error(data)
@@ -65,7 +66,8 @@ function MainComponent() {
                 const currentUser: UserModel = {
                     name: data.name,
                     id: data.id,
-                    roomId: data.roomId
+                    roomId: data.roomId,
+                    status: data.status
                 }
                 setCurrentUser(currentUser);
                 setRoomId(data.roomId);

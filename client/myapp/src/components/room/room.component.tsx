@@ -1,6 +1,7 @@
 import {useState} from "react";
 import "./room.component.css"
-import {Button, TextField, Tooltip} from "@mui/material";
+import {Button, MenuItem, TextField, Tooltip} from "@mui/material";
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import {useTranslation} from "react-i18next";
 import {MessageModel} from "../../models/message.model";
 import { UserModel } from "../../models/user.model";
@@ -13,6 +14,7 @@ function RoomComponent(props: {roomId: string, currentUser: UserModel, socket: a
     const [message, setMessage] = useState("");
     const [answer, setAnswer] = useState("");
     const [isSending, setIsSending] = useState(false);
+    const [userNumber, setUserNumber] = useState(2);
 
     const sendMessage = (messageContent: string) => {
         const m: MessageModel = {
@@ -75,10 +77,37 @@ function RoomComponent(props: {roomId: string, currentUser: UserModel, socket: a
             setAnswer("");
         })
     }
+
+    const handleUserNumberChange = (num: number | string) => {
+        console.log(num);
+        const data = {
+            roomId: props.roomId,
+            count: num
+        }
+        props.socket.emit('userNumber:update', data)
+        setUserNumber(num as number)
+    }
+
     return (
         <div className="room-component">
             <div className="room-component_content">
                 <div className="room-component_content__users">
+                    {props.currentUser.status === "ROOM_ADMIN" ? 
+                    <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={userNumber}
+                        label="User count"
+                        onChange={(e) => handleUserNumberChange(e.target.value)}
+                    >
+                        <MenuItem value={2}>2</MenuItem>
+                        <MenuItem value={3}>3</MenuItem>
+                        <MenuItem value={4}>4</MenuItem>
+                        <MenuItem value={5}>5</MenuItem>
+                        <MenuItem value={6}>6</MenuItem>
+                        <MenuItem value={7}>7</MenuItem>
+                    </Select>
+                    : null}
                     {props.users.map((user) => (
                         <div className={user.id === props.currentUser.id ? "room-component_content__users-user__my" :"room-component_content__users-user"}>
                             { user.name}
