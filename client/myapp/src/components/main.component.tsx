@@ -65,7 +65,8 @@ function MainComponent() {
                 const currentUser: UserModel = {
                     name: data.name,
                     id: data.id,
-                    roomId: data.roomId
+                    roomId: data.roomId,
+                    status: data.status
                 }
                 setCurrentUser(currentUser);
                 setRoomId(data.roomId);

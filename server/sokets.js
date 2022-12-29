@@ -5,6 +5,7 @@ const {ALLOWED_ORIGIN} = require("./server-const")
 const cors = require('cors')
 const users = require('./users')()
 const messages = {}
+const roomUserCount = {}
 
 const app = express()
 app.use(
@@ -23,7 +24,7 @@ const socket = io(server, {
 
 const updateMessageList = (roomId) => {
     
-  }
+}
 
 const updateUsersList = (roomId) => {
     const roomUser = users.getByRoom(roomId);
@@ -51,12 +52,32 @@ socket.on('connection', (soc) => {
             return cb("Incorrect input data")
         }
 
-        soc.join(data.roomId)
         data.id = soc.id
-        cb(data)
+        const currentUsers = users.getByRoom(data.roomId);
+        if (currentUsers?.length === 0) {
+            soc.join(data.roomId)
+            data.status = "ROOM_ADMIN"
+            users.add(data)
+            cb(data)
+            soc.emit('notification', {
+                text: `Please specify maximum count of users for ${data.roomId} room.`,
+                type: "info"
+            })
+            updateUsersList(data.roomId)
+            return;
+        }
+        if (roomUserCount[data.roomId] && currentUsers?.length + 1 > roomUserCount[data.roomId]) {
+            soc.emit('notification', {
+                text: "The number of users has been exceeded, please create a new room or contact the administrator",
+                type: "error"
+            })
+            return cb("The number of users has been exceeded, please create a new room or contact the administrator")
+        }
+        soc.join(data.roomId)
         users.removeUserById(data.id)
         users.add(data)
-        
+        cb(data)
+
         soc
         .to(data.roomId)
         .emit('notification', {
@@ -64,6 +85,10 @@ socket.on('connection', (soc) => {
             type: "success"
         })
         updateUsersList(data.roomId)
+    })
+
+    soc.on('userNumber:update', (data) => {
+        roomUserCount[data.roomId] = data.count
     })
 
     // messages handlers
