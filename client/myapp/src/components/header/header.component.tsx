@@ -33,7 +33,7 @@ function HeaderComponent(props: {roomId: string, auth: any, onLogout: any}) {
         setUserEl(null);
         // sessionStorage.delete('access)token');
         props.onLogout();
-        navigate("/auth");
+        navigate("/");
     };
 
     return (
