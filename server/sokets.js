@@ -6,6 +6,8 @@ const cors = require('cors')
 const users = require('./users')()
 const messages = {}
 const roomUserCount = {}
+const roomsPassword = {}
+
 
 const app = express()
 app.use(
@@ -44,7 +46,7 @@ socket.on('connection', (soc) => {
         updateUsersList(userInfo.roomId)
     })
     soc.on('userJoined', (data, cb) => {
-        if (!data.name || !data.roomId) {
+        if (!data.name || !data.roomId || !data.password) {
             soc.emit('notification', {
                 text: "Incorrect input data",
                 type: "error"
@@ -55,6 +57,7 @@ socket.on('connection', (soc) => {
         data.id = soc.id
         const currentUsers = users.getByRoom(data.roomId);
         if (currentUsers?.length === 0) {
+            roomsPassword[data.roomId] = data.password
             soc.join(data.roomId)
             data.status = "ROOM_ADMIN"
             users.add(data)
@@ -73,18 +76,26 @@ socket.on('connection', (soc) => {
             })
             return cb("The number of users has been exceeded, please create a new room or contact the administrator")
         }
-        soc.join(data.roomId)
-        users.removeUserById(data.id)
-        users.add(data)
-        cb(data)
+        if (roomsPassword[data.roomId] === data.password) {
+            soc.join(data.roomId)
+            users.removeUserById(data.id)
+            users.add(data)
+            cb(data)
 
-        soc
-        .to(data.roomId)
-        .emit('notification', {
-            text: `User ${data.name} joined`,
-            type: "success"
-        })
-        updateUsersList(data.roomId)
+            soc
+            .to(data.roomId)
+            .emit('notification', {
+                text: `User ${data.name} joined`,
+                type: "success"
+            })
+            updateUsersList(data.roomId)
+        } else {
+            soc.emit('notification', {
+                text: "Incorrect password",
+                type: "error"
+            })
+            return cb("Incorrect password")
+        }
     })
 
     soc.on('userNumber:update', (data) => {
