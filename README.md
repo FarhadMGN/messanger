@@ -18,3 +18,13 @@ After discuss reporter can share answer.
 
 <img width="1023" alt="image" src="https://user-images.githubusercontent.com/43624329/209860940-c73b64f6-8303-4524-88f4-331d555ec388.png">
 
+In latest version 3.1.0 was added functional, that requires password.
+<img width="1342" alt="image" src="https://user-images.githubusercontent.com/43624329/209937553-d249224a-e660-4f53-8bb5-4815257da4f9.png">
+<img width="1138" alt="image" src="https://user-images.githubusercontent.com/43624329/209937594-4bc86b6b-dfc1-4f52-85d8-7d75b5718de1.png">
+
+And the host user can limit maximum number of users. In bellow case is 2.
+<img width="1366" alt="image" src="https://user-images.githubusercontent.com/43624329/209937705-4afce2cb-ed56-442c-b933-2bf5cecbadfe.png">
+<img width="1359" alt="image" src="https://user-images.githubusercontent.com/43624329/209937849-0550e4dc-c033-4421-be7b-91c1bc8dd32b.png">
+
+
+
